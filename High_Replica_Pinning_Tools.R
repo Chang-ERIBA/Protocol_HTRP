@@ -94,7 +94,7 @@ merging_files <- function(file_lib, data_gene, cells = 1536, rows_plate, columns
     arrange(`Plate #`, Column, Row) %>%  ## Ordering by Plate, Column and Row.
     mutate(`Plate #` = as.character(`Plate #`),
            Column = as.character(Column)) %>% 
-    select(`Plate #`, Row, Column, ORF, Gene, contains("mutation"))
+    select(`Plate #`, Row, Column, ORF, Gene, contains("mutation", ignore.case = TRUE))
   
   plates_lib <- unique(df_lib$`Plate #`)
   
@@ -471,7 +471,7 @@ DataColony_Filling <- function(fileScreen,
       "Median_{Med_lower*100}" := Median_NSP*Med_lower,
       colonies_NSP = sum(c_across(starts_with("NSP")) > c_across(starts_with(Med_high_Char)), na.rm = TRUE),
       colonies_SP = sum(c_across(starts_with("SP")) > c_across(starts_with(Med_low_Char)), na.rm = TRUE),
-      perc_GCR = colonies_SP/colonies_NSP
+      Freq_percent = colonies_SP/colonies_NSP
     )
   
   ## Sheet Raw Data
@@ -482,13 +482,13 @@ DataColony_Filling <- function(fileScreen,
   # Ordering and Grouping
 
   x <- raw_data %>% 
-    select(starts_with("Old"), contains("ORF"), contains("Gene"), starts_with("mutation")) %>% 
+    select(starts_with("Old"), contains("ORF"), contains("Gene"), starts_with("mutation", ignore.case = TRUE)) %>% 
     names()
   cat("Grouping colonies by the next variables: \n")
   cat(x, "\n\n")
   
   grouped_data <- raw_data %>% 
-    group_by(Old_plate, Old_row, Old_column, ORF, Gene, c_across(starts_with("mutation")))
+    group_by(Old_plate, Old_row, Old_column, ORF, Gene, c_across(starts_with("mutation", ignore.case = TRUE)))
 
   
   grouped_data <- grouped_data %>% 
@@ -500,7 +500,7 @@ DataColony_Filling <- function(fileScreen,
     ) %>% 
     ungroup() %>% 
     mutate(
-      perc_GCR = round((colonies_total_SP/colonies_total_NSP)*100, 3)
+      Freq_percent = round((colonies_total_SP/colonies_total_NSP)*100, 3)
     )
   
   ordered_data  <-grouped_data %>%
@@ -513,7 +513,7 @@ DataColony_Filling <- function(fileScreen,
   
   ## Ranked
   ranked_data <- grouped_data %>% 
-    arrange(desc(perc_GCR)) 
+    arrange(desc(Freq_percent)) 
   
   ## Sheet Ranked Data
   addWorksheet(OutFile, "Ranked")
@@ -524,21 +524,7 @@ DataColony_Filling <- function(fileScreen,
   cat(paste0("Filtering Data with the treshold ", threshold, " in total colonies for Non-Selective plates.\n"))
   filtered_data <- grouped_data %>% 
     filter(colonies_total_NSP >= threshold) %>% 
-    arrange(desc(perc_GCR))
-  
-  # if (isTS){
-  #   filtered_data <- filtered_data %>% 
-  #     arrange(desc(perc_GCR))
-  # } else {
-  #   positions <- read_csv(data_positions, show_col_types = FALSE) %>% 
-  #     pull(Position)
-  #   # positions <- c("1A18","1A20","1A22","1A24","1C2","1C4","1C6","1C8","1C10","1C12","1C14", "1C16", "1C20") ## From a File?
-  #   filtered_data <- filtered_data %>% 
-  #     unite(Position, Old_plate, Old_row, Old_column, sep = "", remove = FALSE) %>% 
-  #     filter(!(Position %in% positions)) %>% 
-  #     select(-Position) %>% 
-  #     arrange(desc(perc_GCR))
-  # }
+    arrange(desc(Freq_percent))
   
   ## Sheet Filtered Data
   addWorksheet(OutFile, "Filtered")
@@ -547,8 +533,12 @@ DataColony_Filling <- function(fileScreen,
   
   ## Counting
   counting_genes <- raw_data %>% 
-    group_by(Gene, ORF,) %>% 
-    summarise(n = n(),.groups = "drop")
+    group_by(Gene, ORF, c_across(starts_with("mutation", ignore.case = TRUE))) %>% 
+    summarise(n = n(),
+              colonies_total_NSP = sum(colonies_NSP, na.rm = TRUE),
+              colonies_total_SP = sum(colonies_SP, na.rm = TRUE),
+              .groups = "drop")
+  names(counting_genes)[grepl("mutation", names(counting_genes))] <- "Mutation"
   
   ## Sheet Counting Data
   addWorksheet(OutFile, "Counting")
@@ -558,32 +548,3 @@ DataColony_Filling <- function(fileScreen,
   saveWorkbook(OutFile, paste0(fileName, "_", Sys.Date(), ".xlsx"))
   cat(paste("Excell file created with the name: ", fileName, "_", Sys.Date(),".xlsx\n", sep = ""))
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

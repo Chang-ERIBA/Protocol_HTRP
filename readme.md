@@ -8,6 +8,13 @@ optparse # version 1.6.6
 openxlsx # version 4.2.4
 ```
 
+To install packages or update:
+
+```r
+pkgs <- c("tidyverse", "optparse", "openxlsx")
+install.packages(pkgs)
+```
+
 ## Use
 
 Both files, `High_Replica_Pinning.R` and `High_Replica_Pinning_Tools.R` needs to find in the same directory before to execute.
@@ -15,23 +22,30 @@ Both files, `High_Replica_Pinning.R` and `High_Replica_Pinning_Tools.R` needs to
 To execute the programm you need to open a **Terminal** in the working directory where the scripts are present. Then you can write the next command:
 
 ```bash
-Rscript High_Replica_Pinning.R -i <Inputfile> -k <Keyfile>  -O <Output_Dir> --Filter <filter_value> --Median_NSP <Median_Ratio_NSP> --Median_SP <Median_Ratio_SP>
+Rscript High_Replica_Pinning.R -i <Inputfile> -k <Keyfile>  -O <Output_Dir> --Filter <filterValue> --Median_NSP <MedianRatioNSP> --Median_SP <MedianRatioSP>
 ```
 
 Description:
 
 * Required:
   * \<Inputfile\> : File with the colony areas data. Every line need to separated by `\n`.
-  * \<Keyfile\>   : Keyfile mutant library for YKO in csv format.
+  * \<Keyfile\>   : Key file in csv format. This file need to have the next names in the columns:
+    * Plate #
+    * Row
+    * Column
+    * ORF
+    * Gene
+    * Mutation (optional; if present it would be used to group and calculate Total Colonies.)
 
-* Optional:
-  * \<filter_value\>    : Numeric value with the threshold to filter the total colonies for Non-Selective Plates. By default the threshold is **12**.
-  * \<Median_Ratio_NSP\>: Numeric value between 0-1 to modify the Median used to calculate the colonies of Non-Selective Plates. By default the value is **0.5**.
-  * \<Median_Ratio_SP\> : Numeric value between 0-1 to modify the Median used to calculate the colonies of Selective Plates. By default the value is **0.2**.
+* Optional Parameters:
+  * \<MedianRatioNSP\>: Numeric value between 0-1 to modify the Median used to calculate the colonies of Non-Selective Plates. By default the value is **0.5**.
+  * \<MedianRatioSP\> : Numeric value between 0-1 to modify the Median used to calculate the colonies of Selective Plates. By default the value is **0.2**.
+  * \<filterValue\>    : Numeric value with the threshold to filter the total colonies for Non-Selective Plates. By default the threshold is **12**.
   * \<Output_Dir\>      : Output directory. In case of not adding a directory a new one will be created with the **Output** name.
 
 This generate an excel files with the next name:
-> \<ColonyFileName\>\_\<Median_Ratio_NSP\>\_\<Median_Ratio_SP\>\_\<filter_value\>\_\<Date\>.xlsx
+
+> \<ColonyFileName\>\_\<MedianRatioNSP\>\_\<MedianRatioSP\>\_\<filterValue\>\_\<Date\>.xlsx
 
 And the next sheets:
 
@@ -46,7 +60,7 @@ And the next sheets:
 Alongside with these files you will find a dataset example that can be used like this:
 
 ```bash
-Rscript High_Replica_Pinning.R -i Data/colonyAreasA_complete.txt -k Data/MATa_YKO_Rothstein_updated.csv -O Test/
+Rscript High_Replica_Pinning.R -i Data/colonyAreasA_YKO.txt -k Data/MATa_YKO_Rothstein_updated.csv -O Test/
 ```
 
 Or it can be used the **TS** screening plates with other parameters:
