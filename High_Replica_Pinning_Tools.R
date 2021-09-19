@@ -503,6 +503,8 @@ DataColony_Filling <- function(fileScreen,
       Freq_percent = round((colonies_total_SP/colonies_total_NSP)*100, 3)
     )
   
+  names(grouped_data)[grepl("mutation", names(grouped_data))] <- "Mutation"
+  
   ordered_data  <-grouped_data %>%
     arrange(desc(Gene), ORF) 
   
@@ -531,13 +533,17 @@ DataColony_Filling <- function(fileScreen,
   writeData(OutFile, sheet = "Filtered", x = filtered_data)
   cat("Filter Complete.\n")
   
-  ## Counting
-  counting_genes <- raw_data %>% 
+  ## Counting filtered: Using the filtered data and calculate the Frec percentage
+  counting_genes <- filtered_data %>% # or row data
     group_by(Gene, ORF, c_across(starts_with("mutation", ignore.case = TRUE))) %>% 
     summarise(n = n(),
-              colonies_total_NSP = sum(colonies_NSP, na.rm = TRUE),
-              colonies_total_SP = sum(colonies_SP, na.rm = TRUE),
-              .groups = "drop")
+              colonies_total_NSP = sum(colonies_total_NSP, na.rm = TRUE),
+              colonies_total_SP = sum(colonies_total_SP, na.rm = TRUE),
+              .groups = "drop") %>% 
+    ungroup() %>% 
+    mutate(
+      Freq_percent = round((colonies_total_SP/colonies_total_NSP)*100, 3)
+    )
   names(counting_genes)[grepl("mutation", names(counting_genes))] <- "Mutation"
   
   ## Sheet Counting Data
