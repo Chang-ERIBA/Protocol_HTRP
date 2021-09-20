@@ -9,7 +9,7 @@
 
 
 ## Check packages
-if (!c("tidyverse", "openxlsx") %in% installed.packages()) {
+if (!all(c("tidyverse", "openxlsx") %in% installed.packages())) {
   stop("Some packages are not installed or updated.\n")
 }
 
@@ -126,6 +126,15 @@ merging_files <- function(file_lib, data_gene, cells = 1536, rows_plate, columns
 # Colony Areas function ---------------------------------------------------
 assign_names <- function(x, names){colnames(x) <- names;return(x)}
 
+cbind.fill <- function(...){
+  # Credits: https://gist.github.com/abelsonlive/4112423
+  nm <- list(...) 
+  nm <- lapply(nm, as.matrix)
+  n <- max(sapply(nm, nrow)) 
+  do.call(cbind, lapply(nm, function (x) 
+    rbind(x, matrix(,n-nrow(x), ncol(x))))) 
+}
+
 # Colony_areas function that read the ColonyAreas file from the screening and
 # prepare a better format to work.
 # @filename: Character. File with the colony areas from the software.
@@ -176,9 +185,10 @@ Screen_processing <- function(data) {
     mutate(
       plate_name = str_replace_all(plate_name, " ", ""),
       Plate_number = str_extract(plate_name, "(\\d)+"),
+      plate_set = str_replace(plate_name, "(\\d)+", ""),
       Plate_number = as.numeric(Plate_number)
     ) %>% 
-    unite("Trat_code", trat, replicate, sep = "_") %>% 
+    unite("Trat_code", trat, replicate, plate_set, sep = "_") %>% 
     select(-circ)
   return(df)
 }
@@ -390,7 +400,7 @@ Colony_format <- function(data) {
     distinct(n) %>% 
     pull(n)
   colony_col <- unique(data$Trat_code)
-  nplates <- length(unique(data$plate_name))
+  nplates <- length(unique(data$Plate_number))
   
   cat(paste0("Screen File with: ", nrows, " rows, ", length(colony_col), " columns and ", nplates, " plates.\n"))
   
@@ -447,7 +457,9 @@ DataColony_Filling <- function(fileScreen,
                                threshold = 12) {
   screen_file <- fileScreen
   
-  database <- cbind(screen_file, data)
+  database <- cbind.fill(screen_file, data) %>% 
+    data.frame(stringsAsFactors = FALSE) %>% 
+    mutate_at(vars(starts_with("NSP"), starts_with("SP")), as.numeric)
   
   OutFile <- createWorkbook() # Excel File
   

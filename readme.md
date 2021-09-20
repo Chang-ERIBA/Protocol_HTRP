@@ -1,6 +1,6 @@
 # High-throughput Replica Pinning
 
-This R script will require the next packages alongside with R-version >= 3.6.3:
+This R script will require the next packages alongside with R-version >= 3.6.3 (To install R and R studio follow this [link](https://www.datacamp.com/community/tutorials/installing-R-windows-mac-ubuntu)):
 
 ```r
 tidyverse # version 1.3.1
@@ -8,7 +8,7 @@ optparse # version 1.6.6
 openxlsx # version 4.2.4
 ```
 
-To install packages or update:
+To install packages or update only copy the next command and execute them in R console:
 
 ```r
 pkgs <- c("tidyverse", "optparse", "openxlsx")
@@ -28,7 +28,15 @@ Rscript High_Replica_Pinning.R -i <Inputfile> -k <Keyfile>  -O <Output_Dir> --Fi
 Description:
 
 * Required:
-  * \<Inputfile\> : File with the colony areas data. Every line need to separated by `\n`.
+  * \<Inputfile\> : File with the colony areas data. The plate's names need to have the next format:
+    * > \<Set\>\<PlateNumber\>_\<NSP-or-SP\>,\<Replicate\>
+
+  For example, in the Data folder the `colonyAreasA_HR.txt` file a plate has the next name:
+
+  > A10_NSP,1,.tif
+
+  Which means Set A, Plate Number 10, Non-Selective Plate and Replicate 1.
+
   * \<Keyfile\>   : Key file in csv format. This file need to have the next names in the columns:
     * Plate #
     * Row

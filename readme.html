@@ -169,11 +169,11 @@ pre code {
 
 <div id="high-throughput-replica-pinning" class="section level1">
 <h1>High-throughput Replica Pinning</h1>
-<p>This R script will require the next packages alongside with R-version &gt;= 3.6.3:</p>
+<p>This R script will require the next packages alongside with R-version &gt;= 3.6.3 (To install R and R studio follow this <a href="https://www.datacamp.com/community/tutorials/installing-R-windows-mac-ubuntu">link</a>):</p>
 <pre class="r"><code>tidyverse # version 1.3.1
 optparse # version 1.6.6
 openxlsx # version 4.2.4</code></pre>
-<p>To install packages or update:</p>
+<p>To install packages or update only copy the next command and execute them in R console:</p>
 <pre class="r"><code>pkgs &lt;- c(&quot;tidyverse&quot;, &quot;optparse&quot;, &quot;openxlsx&quot;)
 install.packages(pkgs)</code></pre>
 <div id="use" class="section level2">
@@ -183,9 +183,21 @@ install.packages(pkgs)</code></pre>
 <pre class="bash"><code>Rscript High_Replica_Pinning.R -i &lt;Inputfile&gt; -k &lt;Keyfile&gt;  -O &lt;Output_Dir&gt; --Filter &lt;filterValue&gt; --Median_NSP &lt;MedianRatioNSP&gt; --Median_SP &lt;MedianRatioSP&gt; --rep &lt;Replicates&gt;</code></pre>
 <p>Description:</p>
 <ul>
-<li>Required:
+<li><p>Required:</p>
 <ul>
-<li>&lt;Inputfile&gt; : File with the colony areas data. Every line need to separated by <code>\n</code>.</li>
+<li>&lt;Inputfile&gt; : File with the colony areas data. The plate’s names need to have the next format:
+<ul>
+<li><blockquote>
+<p>&lt;Set&gt;&lt;PlateNumber&gt;_&lt;NSP-or-SP&gt;,&lt;Replicate&gt;</p>
+</blockquote></li>
+</ul></li>
+</ul>
+<p>For example, in the Data folder the <code>colonyAreasA_HR.txt</code> file a plate has the next name:</p>
+<blockquote>
+<p>A10_NSP,1,.tif</p>
+</blockquote>
+<p>Which means Set A, Plate Number 10, Non-Selective Plate and Replicate 1.</p>
+<ul>
 <li>&lt;Keyfile&gt; : Key file in csv format. This file need to have the next names in the columns:
 <ul>
 <li>Plate #</li>
@@ -196,7 +208,7 @@ install.packages(pkgs)</code></pre>
 <li>Mutation (optional; if present it would be used to group and calculate Total Colonies.)</li>
 </ul></li>
 </ul></li>
-<li>Optional Parameters:
+<li><p>Optional Parameters:</p>
 <ul>
 <li>&lt;Replicates&gt;: Numeric value to multiply the sum colonies from Non-Selective Plates. By default the value is <strong>1</strong>.</li>
 <li>&lt;MedianRatioNSP&gt;: Numeric value between 0-1 to modify the Median used to calculate the colonies of Non-Selective Plates. By default the value is <strong>0.5</strong>.</li>
