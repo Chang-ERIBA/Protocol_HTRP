@@ -433,7 +433,7 @@ Colony_format <- function(data) {
 # @fileScreen: Character. Database created with the genenames, new and old columns
 # @data: Data frame. Data Colony in a table format. Output from Colony_format function
 # @type_file: Character. Only two possible options, "A", "B" (depleted)
-# @isTS: Logical.
+# @isTS: Logical. (depleted)
 # @fileName: Character. Path and file name for the Excel File
 # @Med_higher: Numeric. Value to change the MEDIAN for Non-Selective Plates. By default 0.5
 # @Med_lower: Numeric. Value to change the lower MEDIAN for Selective Plates. By default 0.2
@@ -441,7 +441,7 @@ Colony_format <- function(data) {
 DataColony_Filling <- function(fileScreen, 
                                data, 
                                fileName, 
-                               isTS = FALSE,
+                               times = 1,
                                Med_higher = 0.5,
                                Med_lower = 0.2,
                                threshold = 12) {
@@ -459,6 +459,7 @@ DataColony_Filling <- function(fileScreen,
   cat(paste0("Processing the colonies using the parameters: \n"))
   cat(paste0(Med_higher*100, " % of the Median Non-Selective Plates.\n"))
   cat(paste0(Med_lower*100, " % of the Median Selective Plates.\n"))
+  cat(paste0("Multiply colonies from Non-Selective Plates by: ", times, "\n"))
   
   raw_data <-  database %>% 
     mutate(
@@ -469,7 +470,7 @@ DataColony_Filling <- function(fileScreen,
       Median_NSP = median(c_across(starts_with("NSP")), na.rm = TRUE),
       "Median_{Med_higher*100}" := Median_NSP*Med_higher,
       "Median_{Med_lower*100}" := Median_NSP*Med_lower,
-      colonies_NSP = sum(c_across(starts_with("NSP")) > c_across(starts_with(Med_high_Char)), na.rm = TRUE),
+      colonies_NSP = sum(c_across(starts_with("NSP")) > c_across(starts_with(Med_high_Char)), na.rm = TRUE)*times,
       colonies_SP = sum(c_across(starts_with("SP")) > c_across(starts_with(Med_low_Char)), na.rm = TRUE),
       Freq_percent = colonies_SP/colonies_NSP
     )
@@ -543,7 +544,8 @@ DataColony_Filling <- function(fileScreen,
     ungroup() %>% 
     mutate(
       Freq_percent = round((colonies_total_SP/colonies_total_NSP)*100, 3)
-    )
+    ) %>% 
+    arrange(desc(Freq_percent))
   names(counting_genes)[grepl("mutation", names(counting_genes))] <- "Mutation"
   
   ## Sheet Counting Data

@@ -18,6 +18,8 @@ option_list <- list(
               help = "Input file with colony areas (required)", type = "character"),
   make_option(opt_str = c("-k", "--keyfile"),
               help = "Keyfile mutant library (required): Containing the mutant library data in csv format", type = "character"),
+  make_option(opt_str = c("--rep"), 
+              help = "Numeric value to multiply the colonies from Non-Selective Plates. [default=%default]", type = "numeric", default = 1),
   make_option(opt_str = c("--Filter"),
               help = "Condition to filter the colonies in the Non-Selective Plates. [default=%default]", type = "numeric", default = 12),
   make_option(opt_str = c("--Median_NSP"),
@@ -108,6 +110,7 @@ cat("------------------------------------------\n")
 cat("Conditions:\n")
 cat("Colony Input File: ", args$inputfile, "\n")
 cat(paste0("Keyfile Used: ",args$keyfile, "\n"))
+cat(paste0("Colony times from Non-Selective Plates: ", args$rep, "\n"))
 cat(paste0("% Median for Non-Selective Plates: ", args$Median_NSP*100, "\n"))
 cat(paste0("% Median for Selective Plates: ", args$Median_SP*100, "\n"))
 cat(paste0("Threshold for Total colonies Filtering conditions in Non-Selective plates: ", args$Filter, "\n"))
@@ -132,10 +135,11 @@ screen_YKO <- Colony_format(data = YKO_data)
 DataColony_Filling(fileScreen = data_lib_YKO,
                    data = screen_YKO,
                    fileName = out_name_YKO,
+                   times = args$rep,
                    Med_higher = args$Median_NSP,
                    Med_lower = args$Median_SP,
-                   threshold = args$Filter,
-                   isTS = FALSE)
+                   threshold = args$Filter
+                   )
 
 cat("Data Preparation Complete.\n")
 cat(paste0(Sys.time(),"\n"))

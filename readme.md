@@ -22,7 +22,7 @@ Both files, `High_Replica_Pinning.R` and `High_Replica_Pinning_Tools.R` needs to
 To execute the programm you need to open a **Terminal** in the working directory where the scripts are present. Then you can write the next command:
 
 ```bash
-Rscript High_Replica_Pinning.R -i <Inputfile> -k <Keyfile>  -O <Output_Dir> --Filter <filterValue> --Median_NSP <MedianRatioNSP> --Median_SP <MedianRatioSP>
+Rscript High_Replica_Pinning.R -i <Inputfile> -k <Keyfile>  -O <Output_Dir> --Filter <filterValue> --Median_NSP <MedianRatioNSP> --Median_SP <MedianRatioSP> --rep <Replicates>
 ```
 
 Description:
@@ -38,6 +38,7 @@ Description:
     * Mutation (optional; if present it would be used to group and calculate Total Colonies.)
 
 * Optional Parameters:
+  * \<Replicates\>:  Numeric value to multiply the sum colonies from Non-Selective Plates. By default the value is **1**.
   * \<MedianRatioNSP\>: Numeric value between 0-1 to modify the Median used to calculate the colonies of Non-Selective Plates. By default the value is **0.5**.
   * \<MedianRatioSP\> : Numeric value between 0-1 to modify the Median used to calculate the colonies of Selective Plates. By default the value is **0.2**.
   * \<filterValue\>    : Numeric value with the threshold to filter the total colonies for Non-Selective Plates. By default the threshold is **12**.

@@ -180,7 +180,7 @@ install.packages(pkgs)</code></pre>
 <h2>Use</h2>
 <p>Both files, <code>High_Replica_Pinning.R</code> and <code>High_Replica_Pinning_Tools.R</code> needs to find in the same directory before to execute.</p>
 <p>To execute the programm you need to open a <strong>Terminal</strong> in the working directory where the scripts are present. Then you can write the next command:</p>
-<pre class="bash"><code>Rscript High_Replica_Pinning.R -i &lt;Inputfile&gt; -k &lt;Keyfile&gt;  -O &lt;Output_Dir&gt; --Filter &lt;filterValue&gt; --Median_NSP &lt;MedianRatioNSP&gt; --Median_SP &lt;MedianRatioSP&gt;</code></pre>
+<pre class="bash"><code>Rscript High_Replica_Pinning.R -i &lt;Inputfile&gt; -k &lt;Keyfile&gt;  -O &lt;Output_Dir&gt; --Filter &lt;filterValue&gt; --Median_NSP &lt;MedianRatioNSP&gt; --Median_SP &lt;MedianRatioSP&gt; --rep &lt;Replicates&gt;</code></pre>
 <p>Description:</p>
 <ul>
 <li>Required:
@@ -198,6 +198,7 @@ install.packages(pkgs)</code></pre>
 </ul></li>
 <li>Optional Parameters:
 <ul>
+<li>&lt;Replicates&gt;: Numeric value to multiply the sum colonies from Non-Selective Plates. By default the value is <strong>1</strong>.</li>
 <li>&lt;MedianRatioNSP&gt;: Numeric value between 0-1 to modify the Median used to calculate the colonies of Non-Selective Plates. By default the value is <strong>0.5</strong>.</li>
 <li>&lt;MedianRatioSP&gt; : Numeric value between 0-1 to modify the Median used to calculate the colonies of Selective Plates. By default the value is <strong>0.2</strong>.</li>
 <li>&lt;filterValue&gt; : Numeric value with the threshold to filter the total colonies for Non-Selective Plates. By default the threshold is <strong>12</strong>.</li>
