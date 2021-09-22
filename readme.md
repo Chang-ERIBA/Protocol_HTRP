@@ -37,10 +37,10 @@ Description:
 
   Which means Set A, Plate Number 10, Non-Selective Plate and Replicate 1.
 
-  * \<Keyfile\>   : Key file in csv format. This file need to have the next names in the columns:
-    * Plate #
-    * Row
-    * Column
+  * \<Keyfile\>   : Key file in csv format. If the coordinates in the keyfile are incomplete, the program would complete the file with a 384 wells format. This file need to have the next names in the columns:
+    * Plate # : Numbers
+    * Row: Letters from **A** to **P**
+    * Column: Numbers from **1** to **24**
     * ORF
     * Gene
     * Mutation (optional; if present it would be used to group and calculate Total Colonies.)

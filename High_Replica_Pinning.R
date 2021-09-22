@@ -21,7 +21,7 @@ option_list <- list(
   make_option(opt_str = c("--rep"), 
               help = "Numeric value to multiply the colonies from Non-Selective Plates. [default=%default]", type = "numeric", default = 1),
   make_option(opt_str = c("--Filter"),
-              help = "Condition to filter the colonies in the Non-Selective Plates. [default=%default]", type = "numeric", default = 12),
+              help = "Condition to filter the colonies in the Non-Selective Plates. [default=%default]", type = "numeric", default = 10),
   make_option(opt_str = c("--Median_NSP"),
               help = "Value in a range of 0-1 to modify the Median criteria in Non-Selective Plates. [default=%default]", type = "numeric", default = 0.5),
   make_option(opt_str = c("--Median_SP"),
@@ -73,7 +73,7 @@ if(file.exists("High_Replica_Pinning_Tools.R")) {
 cat("Matrix Preparation Of 1564 Cells.\n\n")
 tryCatch({data_lib <- matrix_preparation(file_lib= args$keyfile,
                                         rows_plate = rows_plate, 
-                                        columns_plate=columns_plate)},
+                                        columns_plate = columns_plate)},
          error = function (x) {"There is an error in the keyfile."})
 
 # Preparing the data library
@@ -87,21 +87,6 @@ data_lib <-  data_lib %>%
 data_lib_YKO <- merging_files(file_lib = args$keyfile, data_gene = data_lib,
                               rows_plate = rows_plate, 
                               columns_plate=columns_plate)
-
-# ## For TS
-# cat("Matrix Preparation TS.\n")
-# cat(args$tsfile, "\n")
-# data_lib <- matrix_preparation(file_lib= args$tsfile)
-# 
-# # Preparing the data library
-# data_lib <-  data_lib %>% 
-#   select(Plate, rowname, New_column, ORF) %>% 
-#   rename("New_row" = "rowname",
-#          "New_plate" = "Plate") %>%
-#   mutate(New_plate = as.character(New_plate))
-# 
-# # Data frame with old and new Coordinates alongside with the others columns from key file.
-# data_lib_TS <- merging_files(file_lib = args$tsfile, data_gene = data_lib)
 
 # Colony Areas ------------------------------------------------------------
 
@@ -143,21 +128,3 @@ DataColony_Filling(fileScreen = data_lib_YKO,
 
 cat("Data Preparation Complete.\n")
 cat(paste0(Sys.time(),"\n"))
-
-# ### TS Process
-# cat("TS Data process.\n")
-# 
-# ts_data <- Screen_processing(data = screen_data,
-#                               screen_pattern = "TS",
-#                               letter = args$set)
-# 
-# screen_ts <- Colony_format(data = ts_data,
-#                             type_letter = args$set)
-# 
-# out_name_ts <- paste0(args$output, out_name, "_TS_")
-# 
-# DataColony_Filling(fileScreen = data_lib_TS,
-#                    data = screen_ts,
-#                    fileName = out_name_ts,
-#                    type_file = args$set,
-#                    isTS = TRUE)

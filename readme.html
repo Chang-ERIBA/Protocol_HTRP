@@ -198,11 +198,11 @@ install.packages(pkgs)</code></pre>
 </blockquote>
 <p>Which means Set A, Plate Number 10, Non-Selective Plate and Replicate 1.</p>
 <ul>
-<li>&lt;Keyfile&gt; : Key file in csv format. This file need to have the next names in the columns:
+<li>&lt;Keyfile&gt; : Key file in csv format. If the coordinates in the keyfile are incomplete, the program would complete the file with a 384 wells format. This file need to have the next names in the columns:
 <ul>
-<li>Plate #</li>
-<li>Row</li>
-<li>Column</li>
+<li>Plate # : Numbers</li>
+<li>Row: Letters from <strong>A</strong> to <strong>P</strong></li>
+<li>Column: Numbers from <strong>1</strong> to <strong>24</strong></li>
 <li>ORF</li>
 <li>Gene</li>
 <li>Mutation (optional; if present it would be used to group and calculate Total Colonies.)</li>

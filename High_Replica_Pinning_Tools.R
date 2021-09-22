@@ -30,13 +30,38 @@ columns_plate <- c(1:48)
 # genes and coordinates from the matrix.
 # @file_lib: Path to the library to read and convert.
 #
-matrix_preparation <- function(file_lib, rows_plate, columns_plate){
+matrix_preparation <- function(file_lib, rows_plate, columns_plate, cells = 384){
   
   # Data library
-  df_lib <- suppressMessages(read_csv(file_lib, show_col_types = FALSE)) %>%
+  df_lib <- suppressMessages(read_csv(file_lib, show_col_types = FALSE, col_types = "c")) %>%
     arrange(`Plate #`, Column, Row) ## Ordering by Plate , Column and Row.
   
   plates_lib <- unique(df_lib$`Plate #`) ## Work by each plate from this document.
+  
+  ## Correction and filling the Key file
+  key_full <- df_lib %>% 
+    group_by(`Plate #`) %>% 
+    tally() %>% 
+    distinct(n) %>% 
+    min()
+  
+  if (key_full != 384) {
+    cat("Coordinates in Key file incomplete. Proceeding to complete it.\n")
+    ## New Database with old and new coordinates
+    nrow_plate <- cells # CHANGE IF NECCESARY
+    old_rows_plate <- rep(unique(df_lib$Row), each = 2, times = nrow_plate/length(rows_plate))
+    old_cols_plate <- rep(unique(df_lib$Column), each = nrow_plate/length(columns_plate)*2) # Necessary multiply for the replicates, IN this case 2
+    nplates <- length(plates_lib)
+    
+    df_lib <- tibble(
+      "Plate #" = as.character(rep(1:nplates, each = nrow_plate)),
+      "Row" = rep(old_rows_plate, times = nplates),
+      "Column" = rep(old_cols_plate, times = nplates),
+    )  %>%
+      distinct() %>%
+      left_join(df_lib, by = c("Row", "Column", "Plate #")) %>%
+      arrange(`Plate #`, Column, Row) ## Ordering by Plate , Column and Row.
+  }
   
   ## Constant values
   nrows_plate <- length(rows_plate)
@@ -132,7 +157,7 @@ cbind.fill <- function(...){
   nm <- lapply(nm, as.matrix)
   n <- max(sapply(nm, nrow)) 
   do.call(cbind, lapply(nm, function (x) 
-    rbind(x, matrix(,n-nrow(x), ncol(x))))) 
+    rbind(x, matrix(nrow = n-nrow(x), ncol = ncol(x))))) 
 }
 
 # Colony_areas function that read the ColonyAreas file from the screening and
@@ -539,7 +564,8 @@ DataColony_Filling <- function(fileScreen,
   cat(paste0("Filtering Data with the treshold ", threshold, " in total colonies for Non-Selective plates.\n"))
   filtered_data <- grouped_data %>% 
     filter(colonies_total_NSP >= threshold) %>% 
-    arrange(desc(Freq_percent))
+    arrange(desc(Freq_percent)) %>% 
+    ungroup()
   
   ## Sheet Filtered Data
   addWorksheet(OutFile, "Filtered")
