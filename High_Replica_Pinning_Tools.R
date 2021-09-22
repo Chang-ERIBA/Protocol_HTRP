@@ -30,7 +30,7 @@ columns_plate <- c(1:48)
 # genes and coordinates from the matrix.
 # @file_lib: Path to the library to read and convert.
 #
-matrix_preparation <- function(file_lib, rows_plate, columns_plate, cells = 384){
+matrix_preparation <- function(file_lib, rows_plate, columns_plate, cells = 1536){
   
   # Data library
   df_lib <- suppressMessages(read_csv(file_lib, show_col_types = FALSE, col_types = "c")) %>%
@@ -45,7 +45,7 @@ matrix_preparation <- function(file_lib, rows_plate, columns_plate, cells = 384)
     distinct(n) %>% 
     min()
   
-  if (key_full != 384) {
+  if (key_full < 384) {
     cat("Coordinates in Key file incomplete. Proceeding to complete it.\n")
     ## New Database with old and new coordinates
     nrow_plate <- cells # CHANGE IF NECCESARY
@@ -510,7 +510,8 @@ DataColony_Filling <- function(fileScreen,
       colonies_NSP = sum(c_across(starts_with("NSP")) > c_across(starts_with(Med_high_Char)), na.rm = TRUE)*times,
       colonies_SP = sum(c_across(starts_with("SP")) > c_across(starts_with(Med_low_Char)), na.rm = TRUE),
       Freq_percent = colonies_SP/colonies_NSP
-    )
+    ) %>% 
+    arrange(as.numeric(New_plate), desc(ORF))
   
   ## Sheet Raw Data
   addWorksheet(OutFile, "Raw Data")
