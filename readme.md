@@ -60,7 +60,7 @@ You will find yourself in the Terminal:
 At this point, to execute the program, you can write the following command:
 
 ```bash
-Rscript High_Replica_Pinning.R -i <Inputfile> -k <Keyfile>  -O <Output_Dir> --Filter <filterValue> --Median_NSP <MedianRatioNSP> --Median_SP <MedianRatioSP> --rep <Replicates>
+Rscript High_Replica_Pinning.R -i <Inputfile> -k <Keyfile>  -O <Output_Dir> --Filter <filterValue> --Median_NSP <MedianRatioNSP> --Median_SP <MedianRatioSP>
 ```
 
 Description:
@@ -84,7 +84,6 @@ Description:
     - Mutation (optional; if present it would be used to group and calculate Total Colonies.)
 
 - Optional Parameters:
-  - \<Replicates\>:  Numeric value to multiply the sum colonies from Non-Selective Plates. By default the value is **1**.
   - \<MedianRatioNSP\>: Numeric value between 0-1 that indicates the percentage of the NSP colony size median used as a size threshold to calculate the number of colonies on Non-Selective Plates. By default the value is **0.5**.
   - \<MedianRatioSP\> : Numeric value between 0-1 that indicates the percentage of the NSP colony size median used as a size threshold to calculate the number of colonies on Selective Plates. By default the value is **0.2**.
   - \<filterValue\>    : Numeric value with the threshold to filter low-quality data bases on the total number of colonies per strain on Non-Selective Plates. By default the threshold is **10**.
