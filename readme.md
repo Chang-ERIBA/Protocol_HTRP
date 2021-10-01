@@ -1,6 +1,12 @@
 # High-throughput Replica Pinning
 
-This R script will require the next packages alongside with R-version >= 3.6.3 (To install R and R studio follow this [link](https://www.datacamp.com/community/tutorials/installing-R-windows-mac-ubuntu)):
+- [High-throughput Replica Pinning](#high-throughput-replica-pinning)
+  - [Installation of programs and packages](#installation-of-programs-and-packages)
+  - [Use](#use)
+  - [Output](#output)
+  - [Examples](#examples)
+
+This R script will require the next packages alongside with R-version >= 3.6.3:
 
 ```r
 tidyverse # version 1.3.1
@@ -8,18 +14,50 @@ optparse # version 1.6.6
 openxlsx # version 4.2.4
 ```
 
-To install packages or update only copy the next command and execute them in R console:
+## Installation of programs and packages
+
+To install R and RStudio follow this [link](https://www.datacamp.com/community/tutorials/installing-R-windows-mac-ubuntu).
+
+Open RStudio.
+
+To install packages or updates, copy the following commands and execute them in R console by pressing ENTER:
+
+<center>
+<img src="./img/img1.png">
+</center>
+
+<br>
 
 ```r
 pkgs <- c("tidyverse", "optparse", "openxlsx")
 install.packages(pkgs)
 ```
 
+You will get a pop-up window asking you if you want to create a personal libray: select `Yes`. It then asks you to select a CRAN mirror: choose any country from the list that is show. The packages will be installed.
+
 ## Use
 
-Both files, `High_Replica_Pinning.R` and `High_Replica_Pinning_Tools.R` needs to find in the same directory before to execute.
+Both files, `High_Replica_Pinning.R` and `High_Replica_Pinning_Tools.R` needs to be in the same directory.
 
-To execute the programm you need to open a **Terminal** in the working directory where the scripts are present. Then you can write the next command:
+To execute the programm you need to open a **Terminal** in the working directory where the scripts are present. To select the proper directory, choose: Session -> Set Working Directory -> Choose Directory...
+
+<center>
+<img src="./img/img2.png">
+</center>
+
+Now you can open the **Terminal** by choosing: Tools -> Terminal -> New Terminal
+
+<center>
+<img src="./img/img3.png">
+</center>
+
+You will find yourself in the Terminal:
+
+<center>
+<img src="./img/img4.png">
+</center>
+
+At this point, to execute the program, you can write the following command:
 
 ```bash
 Rscript High_Replica_Pinning.R -i <Inputfile> -k <Keyfile>  -O <Output_Dir> --Filter <filterValue> --Median_NSP <MedianRatioNSP> --Median_SP <MedianRatioSP> --rep <Replicates>
@@ -27,53 +65,79 @@ Rscript High_Replica_Pinning.R -i <Inputfile> -k <Keyfile>  -O <Output_Dir> --Fi
 
 Description:
 
-* Required:
-  * \<Inputfile\> : File with the colony areas data. The plate's names need to have the next format:
-    * > \<Set\>\<PlateNumber\>_\<NSP-or-SP\>,\<Replicate\>
+- Required:
+  - \<Inputfile\> : Path to the file with the colony areas data. The plate's names need to have the next format:
+    - > \<ScreenID\>\<PlateNumber\>_\<NSP-or-SP\>,\<ReplicateNumber\>
 
   For example, in the Data folder the `colonyAreasA_HR.txt` file a plate has the next name:
 
   > A10_NSP,1,.tif
 
-  Which means Set A, Plate Number 10, Non-Selective Plate and Replicate 1.
+  Which means screen ID "A", Plate Number "10", Non-Selective Plate and Replicate "1".
 
-  * \<Keyfile\>   : Key file in csv format. If the coordinates in the keyfile are incomplete, the program would complete the file with a 384 wells format. This file need to have the next names in the columns:
-    * Plate # : Numbers
-    * Row: Letters from **A** to **P**
-    * Column: Numbers from **1** to **24**
-    * ORF
-    * Gene
-    * Mutation (optional; if present it would be used to group and calculate Total Colonies.)
+  - \<Keyfile\>   : Path to the keyfile. Th keyfile should be in csv format. If the coordinates in the keyfile are incomplete, the program complete the file with a 384 format. This file need to have the next names in the columns:
+    - Plate # : Numbers
+    - Row: Letters from **A** to **P**
+    - Column: Numbers from **1** to **24**
+    - ORF
+    - Gene
+    - Mutation (optional; if present it would be used to group and calculate Total Colonies.)
 
-* Optional Parameters:
-  * \<Replicates\>:  Numeric value to multiply the sum colonies from Non-Selective Plates. By default the value is **1**.
-  * \<MedianRatioNSP\>: Numeric value between 0-1 to modify the Median used to calculate the colonies of Non-Selective Plates. By default the value is **0.5**.
-  * \<MedianRatioSP\> : Numeric value between 0-1 to modify the Median used to calculate the colonies of Selective Plates. By default the value is **0.2**.
-  * \<filterValue\>    : Numeric value with the threshold to filter the total colonies for Non-Selective Plates. By default the threshold is **12**.
-  * \<Output_Dir\>      : Output directory. In case of not adding a directory a new one will be created with the **Output** name.
+- Optional Parameters:
+  - \<Replicates\>:  Numeric value to multiply the sum colonies from Non-Selective Plates. By default the value is **1**.
+  - \<MedianRatioNSP\>: Numeric value between 0-1 that indicates the percentage of the NSP colony size median used as a size threshold to calculate the number of colonies on Non-Selective Plates. By default the value is **0.5**.
+  - \<MedianRatioSP\> : Numeric value between 0-1 that indicates the percentage of the NSP colony size median used as a size threshold to calculate the number of colonies on Selective Plates. By default the value is **0.2**.
+  - \<filterValue\>    : Numeric value with the threshold to filter low-quality data bases on the total number of colonies per strain on Non-Selective Plates. By default the threshold is **10**.
+  - \<Output_Dir\>      : Output directory. By default, a new directory named **Output** will be created.
 
-This generate an excel files with the next name:
+**Note.** From simplicity, put the Inputfile and the Keyfile in a **Data** folder inside the directory containing the script files. In this way, the path to the files will be: `Data/"filename"`.
+
+**Note.** It is easier to fill in the desired files names and parameters in a text editing program, and then copy and paste the whole command in the Terminal.
+
+Please check the Examples reported at the bottom of this tutorial.
+
+## Output
+
+This generate an output excel file with the following name:
 
 > \<ColonyFileName\>\_\<MedianRatioNSP\>\_\<MedianRatioSP\>\_\<filterValue\>\_\<Date\>.xlsx
 
-And the next sheets:
+And the following sheets:
 
-* Raw
-* Ordered
-* Ranked
-* Filtered
-* Counting
+- Raw
+- Ordered
+- Ranked
+- Filtered
+- Counting
 
-## Example
+## Examples
 
-Alongside with these files you will find a dataset example that can be used like this:
+Alongside with these files, in the Data folder you will find two dataset examples that can be used.
+
+- First example:
+  - Input file wiht colony area data: `colonyAreas_HR.txt` in folder **Data**
+  - Keyfile: `MATa_YKO_v5.0_384.csv` in folder **Data**
+
+Command for data analysis:
 
 ```bash
-Rscript High_Replica_Pinning.R -i Data/colonyAreasA_YKO.txt -k Data/MATa_YKO_Rothstein_updated.csv -O Test/
+Rscript High_Replica_Pinning.R -i Data/colonyAreas_HR.txt -k Data/MATa_YKO_v5.0_384.csv -O Test/
 ```
 
-Or it can be used the **TS** screening plates with other parameters:
+- Second example:
+  - Input file with colony area data: `colonyAreas_HR.txt` in folder Data
+  - Keyfile: `MATa_YKO_v5.0_384.csv` in folder Data
+
+Additional options
+
+- Filter value = 15
+- Median Ratio NSP = 0.6
+- Median Ratio SP = 0.1
+
+The output will be generated in the Test Folder.
+
+Command for data analysis:
 
 ```bash
-Rscript High_Replica_Pinning.R -i Data/colonyAreasA_TS.txt -k Data/tsMATaKeyFile-384.csv -O Test/ --Filter 15 --Median_NSP 0.6 --Median_SP 0.1
+Rscript High_Replica_Pinning.R -i Data/colonyAreas_HR.txt -k Data/tsMATaKeyFile-384.csv -O Test/ --Filter 15 --Median_NSP 0.6 --Median_SP 0.1
 ```

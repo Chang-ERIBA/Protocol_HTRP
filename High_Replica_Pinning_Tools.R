@@ -34,6 +34,7 @@ matrix_preparation <- function(file_lib, rows_plate, columns_plate, cells = 1536
   
   # Data library
   df_lib <- suppressMessages(read_csv(file_lib, show_col_types = FALSE, col_types = "c")) %>%
+    drop_na(`Plate #`, Column, Row) %>% 
     arrange(`Plate #`, Column, Row) ## Ordering by Plate , Column and Row.
   
   plates_lib <- unique(df_lib$`Plate #`) ## Work by each plate from this document.
@@ -116,6 +117,7 @@ merging_files <- function(file_lib, data_gene, cells = 1536, rows_plate, columns
   
   # Data library
   df_lib <- suppressMessages(read_csv(file_lib, show_col_types = FALSE)) %>%
+    drop_na(`Plate #`, Column, Row) %>% 
     arrange(`Plate #`, Column, Row) %>%  ## Ordering by Plate, Column and Row.
     mutate(`Plate #` = as.character(`Plate #`),
            Column = as.character(Column)) %>% 
@@ -510,13 +512,20 @@ DataColony_Filling <- function(fileScreen,
       colonies_NSP = sum(c_across(starts_with("NSP")) > c_across(starts_with(Med_high_Char)), na.rm = TRUE)*times,
       colonies_SP = sum(c_across(starts_with("SP")) > c_across(starts_with(Med_low_Char)), na.rm = TRUE),
       Freq_percent = colonies_SP/colonies_NSP
-    ) %>% 
-    arrange(as.numeric(New_plate), desc(ORF))
+    ) 
   
   ## Sheet Raw Data
   addWorksheet(OutFile, "Raw Data")
   writeData(OutFile, sheet = "Raw Data", x = raw_data)
   cat("Raw Data Complete.\n\n")
+  
+  raw_ordered <-  raw_data %>% 
+    arrange(as.numeric(New_plate), desc(ORF))
+  
+  ## Sheet Raw Data
+  addWorksheet(OutFile, "Raw-Ordered Data")
+  writeData(OutFile, sheet = "Raw-Ordered Data", x = raw_ordered)
+  cat("Raw Data Ordered Complete.\n\n")
   
   # Ordering and Grouping
 
@@ -564,7 +573,7 @@ DataColony_Filling <- function(fileScreen,
   # Filtered
   cat(paste0("Filtering Data with the treshold ", threshold, " in total colonies for Non-Selective plates.\n"))
   filtered_data <- grouped_data %>% 
-    filter(colonies_total_NSP >= threshold) %>% 
+    filter(colonies_total_NSP >= threshold | (Gene != "" & ORF != "")) %>% 
     arrange(desc(Freq_percent)) %>% 
     ungroup()
   

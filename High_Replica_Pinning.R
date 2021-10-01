@@ -18,8 +18,8 @@ option_list <- list(
               help = "Input file with colony areas (required)", type = "character"),
   make_option(opt_str = c("-k", "--keyfile"),
               help = "Keyfile mutant library (required): Containing the mutant library data in csv format", type = "character"),
-  make_option(opt_str = c("--rep"), 
-              help = "Numeric value to multiply the colonies from Non-Selective Plates. [default=%default]", type = "numeric", default = 1),
+  # make_option(opt_str = c("--rep"), 
+  #             help = "Numeric value to multiply the colonies from Non-Selective Plates. [default=%default]", type = "numeric", default = 1),
   make_option(opt_str = c("--Filter"),
               help = "Condition to filter the colonies in the Non-Selective Plates. [default=%default]", type = "numeric", default = 10),
   make_option(opt_str = c("--Median_NSP"),
@@ -37,7 +37,7 @@ args <- parse_args(OptionParser(option_list = option_list))
 cat("
 #######################################
 High-throughput Replica Pinning
-#######################################\n")
+#######################################\n\n")
 
 # Validate directory output exists
 if (args$output == getwd()) {
@@ -70,11 +70,17 @@ if(file.exists("High_Replica_Pinning_Tools.R")) {
 
 # Plates Formatting -------------------------------------------------------
 
-cat("Matrix Preparation Of 1564 Cells.\n\n")
-tryCatch({data_lib <- matrix_preparation(file_lib= args$keyfile,
+cat("Reading and Formating Key file.\n")
+tryCatch(
+  {
+    data_lib <- matrix_preparation(file_lib= args$keyfile,
                                         rows_plate = rows_plate, 
-                                        columns_plate = columns_plate)},
-         error = function (x) {"There is an error in the keyfile."})
+                                        columns_plate = columns_plate)
+    },
+  error = function(x) {
+    cat("There is an error in the keyfile:\n")
+           }
+  )
 
 # Preparing the data library
 data_lib <-  data_lib %>% 
@@ -95,7 +101,7 @@ cat("------------------------------------------\n")
 cat("Conditions:\n")
 cat("Colony Input File: ", args$inputfile, "\n")
 cat(paste0("Keyfile Used: ",args$keyfile, "\n"))
-cat(paste0("Colony times from Non-Selective Plates: ", args$rep, "\n"))
+#cat(paste0("Colony times from Non-Selective Plates: ", args$rep, "\n"))
 cat(paste0("% Median for Non-Selective Plates: ", args$Median_NSP*100, "\n"))
 cat(paste0("% Median for Selective Plates: ", args$Median_SP*100, "\n"))
 cat(paste0("Threshold for Total colonies Filtering conditions in Non-Selective plates: ", args$Filter, "\n"))
@@ -120,7 +126,7 @@ screen_YKO <- Colony_format(data = YKO_data)
 DataColony_Filling(fileScreen = data_lib_YKO,
                    data = screen_YKO,
                    fileName = out_name_YKO,
-                   times = args$rep,
+                   times = 1, #args$rep,
                    Med_higher = args$Median_NSP,
                    Med_lower = args$Median_SP,
                    threshold = args$Filter
