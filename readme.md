@@ -33,13 +33,13 @@ pkgs <- c("tidyverse", "optparse", "openxlsx")
 install.packages(pkgs)
 ```
 
-You will get a pop-up window asking you if you want to create a personal libray: select `Yes`. It then asks you to select a CRAN mirror: choose any country from the list that is show. The packages will be installed.
+You will get a pop-up window asking you if you want to create a personal libray: select `Yes`. It then asks you to select a CRAN mirror: choose any country from the list that is shown. The packages will be installed.
 
 ## Use
 
-Both files, `High_Replica_Pinning.R` and `High_Replica_Pinning_Tools.R` needs to be in the same directory.
+Both files `High_Replica_Pinning.R` and `High_Replica_Pinning_Tools.R` need to be in the same directory.
 
-To execute the programm you need to open a **Terminal** in the working directory where the scripts are present. To select the proper directory, choose: Session -> Set Working Directory -> Choose Directory...
+To execute the program you need to open a **Terminal** in the working directory where the scripts are located. To select the proper directory, choose: Session -> Set Working Directory -> Choose Directory...
 
 <center>
 <img src="./img/img2.png">
@@ -66,22 +66,22 @@ Rscript High_Replica_Pinning.R -i <Inputfile> -k <Keyfile>  -O <Output_Dir> --Fi
 Description:
 
 - Required:
-  - \<Inputfile\> : Path to the file with the colony areas data. The plate's names need to have the next format:
+  - \<Inputfile\> : Path to the file with the colony areas data. The plate names need to have the following format:
     - > \<ScreenID\>\<PlateNumber\>_\<NSP-or-SP\>,\<ReplicateNumber\>
 
-  For example, in the Data folder the `colonyAreasA_HR.txt` file a plate has the next name:
+  For example, in the Data folder the `colonyAreasA_HR.txt` file one of the plates has the following name:
 
   > A10_NSP,1,.tif
 
-  Which means screen ID "A", Plate Number "10", Non-Selective Plate and Replicate "1".
+  Which means: screen ID "A", Plate Number "10", Non-Selective Plate and Replicate "1".
 
-  - \<Keyfile\>   : Path to the keyfile. Th keyfile should be in csv format. If the coordinates in the keyfile are incomplete, the program complete the file with a 384 format. This file need to have the next names in the columns:
+  - \<Keyfile\>   : Path to the keyfile. Th keyfile should be in csv format. If the coordinates in the keyfile are incomplete, the program will complete the file with a 384 format. This file needs to contain the following columns:
     - Plate # : Numbers
     - Row: Letters from **A** to **P**
     - Column: Numbers from **1** to **24**
-    - ORF
-    - Gene
-    - Mutation (optional; if present it would be used to group and calculate Total Colonies.)
+    - ORF: systematic names of *S. cerevisiae* genes
+    - Gene: gene names
+    - Mutation (optional; if present it would be used to group and calculate "Total Colonies".)
 
 - Optional Parameters:
   - \<MedianRatioNSP\>: Numeric value between 0-1 that indicates the percentage of the NSP colony size median used as a size threshold to calculate the number of colonies on Non-Selective Plates. By default the value is **0.5**.
@@ -89,21 +89,22 @@ Description:
   - \<filterValue\>    : Numeric value with the threshold to filter low-quality data bases on the total number of colonies per strain on Non-Selective Plates. By default the threshold is **10**.
   - \<Output_Dir\>      : Output directory. By default, a new directory named **Output** will be created.
 
-**Note.** From simplicity, put the Inputfile and the Keyfile in a **Data** folder inside the directory containing the script files. In this way, the path to the files will be: `Data/"filename"`.
+**Note.** For simplicity, put the Inputfile and the Keyfile in a **Data** folder inside the directory containing the script files. In this way, the path to the files will be: `Data/"filename"`.
 
-**Note.** It is easier to fill in the desired files names and parameters in a text editing program, and then copy and paste the whole command in the Terminal.
+**Note.** It is easier to fill in the desired file names and parameters in a text editing program, and then copy and paste the whole command in the Terminal.
 
 Please check the Examples reported at the bottom of this tutorial.
 
 ## Output
 
-This generate an output excel file with the following name:
+This script generates an output Excel file with the following name:
 
 > \<ColonyFileName\>\_\<MedianRatioNSP\>\_\<MedianRatioSP\>\_\<filterValue\>\_\<Date\>.xlsx
 
 And the following sheets:
 
 - Raw
+- Raw-Ordered
 - Ordered
 - Ranked
 - Filtered
@@ -111,11 +112,13 @@ And the following sheets:
 
 ## Examples
 
-Alongside with these files, in the Data folder you will find two dataset examples that can be used.
+Alongside with these files, in the Data folder you will find one dataset that can be used in the following examples.
 
 - First example:
-  - Input file wiht colony area data: `colonyAreas_HR.txt` in folder **Data**
+  - Input file with colony area data: `colonyAreas_HR.txt` in folder **Data**
   - Keyfile: `MATa_YKO_v5.0_384.csv` in folder **Data**
+  - In this case, no `<filterValue>`, `<MedianRatioNSP>` and `<MedianRatioSP>` are specified, therefore the default setting will be used.
+  - The output file will be generated int the **Test** folder.
 
 Command for data analysis:
 
@@ -126,12 +129,9 @@ Rscript High_Replica_Pinning.R -i Data/colonyAreas_HR.txt -k Data/MATa_YKO_v5.0_
 - Second example:
   - Input file with colony area data: `colonyAreas_HR.txt` in folder Data
   - Keyfile: `MATa_YKO_v5.0_384.csv` in folder Data
-
-Additional options
-
-- Filter value = 15
-- Median Ratio NSP = 0.6
-- Median Ratio SP = 0.1
+  - Filter value = 15
+  - Median Ratio NSP = 0.6
+  - Median Ratio SP = 0.1
 
 The output will be generated in the Test Folder.
 

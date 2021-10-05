@@ -498,7 +498,7 @@ DataColony_Filling <- function(fileScreen,
   cat(paste0("Processing the colonies using the parameters: \n"))
   cat(paste0(Med_higher*100, " % of the Median Non-Selective Plates.\n"))
   cat(paste0(Med_lower*100, " % of the Median Selective Plates.\n"))
-  cat(paste0("Multiply colonies from Non-Selective Plates by: ", times, "\n"))
+  #cat(paste0("Multiply colonies from Non-Selective Plates by: ", times, "\n"))
   
   raw_data <-  database %>% 
     mutate(
@@ -573,8 +573,9 @@ DataColony_Filling <- function(fileScreen,
   # Filtered
   cat(paste0("Filtering Data with the treshold ", threshold, " in total colonies for Non-Selective plates.\n"))
   filtered_data <- grouped_data %>% 
-    filter(colonies_total_NSP >= threshold | (Gene != "" & ORF != "")) %>% 
+    filter(colonies_total_NSP >= threshold) %>%
     arrange(desc(Freq_percent)) %>% 
+    filter(Gene != "" & ORF != "") %>% 
     ungroup()
   
   ## Sheet Filtered Data
