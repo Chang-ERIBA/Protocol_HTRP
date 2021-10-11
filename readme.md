@@ -37,7 +37,11 @@ You will get a pop-up window asking you if you want to create a personal libray:
 
 ## Use
 
-Both files `High_Replica_Pinning.R` and `High_Replica_Pinning_Tools.R` need to be in the same directory.
+To download the Protocol_HTRP stored in this site, choose: `Code` -> `Download ZIP`. Then Unzip this file. Both `High_Replica_Pinning.R` and `High_Replica_Pinning_Tools.R` files need to be in the same directory.
+
+<center>
+<img src="./img/download_code.png">
+</center>
 
 To execute the program you need to open a **Terminal** in the working directory where the scripts are located. To select the proper directory, choose: Session -> Set Working Directory -> Choose Directory...
 

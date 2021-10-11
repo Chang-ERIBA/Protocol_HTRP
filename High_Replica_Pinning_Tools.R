@@ -598,8 +598,8 @@ DataColony_Filling <- function(fileScreen,
   names(counting_genes)[grepl("mutation", names(counting_genes))] <- "Mutation"
   
   ## Sheet Counting Data
-  addWorksheet(OutFile, "Counting")
-  writeData(OutFile, sheet = "Counting", x = counting_genes)
+  addWorksheet(OutFile, "Grouped")
+  writeData(OutFile, sheet = "Grouped", x = counting_genes)
   cat("Count Complete.\n")
   
   saveWorkbook(OutFile, paste0(fileName, "_", Sys.Date(), ".xlsx"))
