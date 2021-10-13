@@ -511,7 +511,7 @@ DataColony_Filling <- function(fileScreen,
       "Median_{Med_lower*100}" := Median_NSP*Med_lower,
       colonies_NSP = sum(c_across(starts_with("NSP")) > c_across(starts_with(Med_high_Char)), na.rm = TRUE)*times,
       colonies_SP = sum(c_across(starts_with("SP")) > c_across(starts_with(Med_low_Char)), na.rm = TRUE),
-      Freq_percent = colonies_SP/colonies_NSP
+      Freq_percent = round((colonies_SP/colonies_NSP)*100, 3)
     ) 
   
   ## Sheet Raw Data

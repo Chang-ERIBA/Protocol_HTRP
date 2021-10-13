@@ -112,7 +112,7 @@ And the following sheets:
 - Ordered
 - Ranked
 - Filtered
-- Counting
+- Grouped
 
 ## Examples
 
