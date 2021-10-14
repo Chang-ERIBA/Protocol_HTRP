@@ -142,5 +142,5 @@ The output will be generated in the Test Folder.
 Command for data analysis:
 
 ```bash
-Rscript High_Replica_Pinning.R -i Data/colonyAreas_HR.txt -k Data/tsMATaKeyFile-384.csv -O Test/ --Filter 15 --Median_NSP 0.6 --Median_SP 0.1
+Rscript High_Replica_Pinning.R -i Data/colonyAreas_HR.txt -k Data/MATa_YKO_v5.0_384.csv -O Test/ --Filter 15 --Median_NSP 0.6 --Median_SP 0.1
 ```
